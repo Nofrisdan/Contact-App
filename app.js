@@ -96,6 +96,7 @@ app.get("/kontak/tambah",(req,res)=> {
 app.post("/kontak/tambah-data",
 //express-validator
 [
+    //custom
     body('nama').custom( v => {
         const duplikat = utils.cekDuplikat(v);
 
@@ -105,6 +106,8 @@ app.post("/kontak/tambah-data",
 
         return true;
     }),
+
+    // check automatic
     check("email").isEmail().withMessage("Email Yang Anda Masukkan Tidak Valid"),
     check("nohp").isMobilePhone("id-ID").withMessage("No HandPhone Yang anda masukkan tidak valid")
 ],
@@ -148,8 +151,6 @@ app.get("/kontak/hapus/:nama",(req,res) => {
 
     // redirect
     res.redirect("/kontak");
-    
-
     // const data = utils.deleteKontak(req.params.nama)
 })
 
