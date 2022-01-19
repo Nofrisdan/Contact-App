@@ -172,9 +172,3 @@ app.get("/testing",(req,res) => {
 app.listen(port,() => {
     console.log(`Listen to localhost:${port}`);
 })
-
-
-
-//return redirect()->to(base_url("/nofrisdan"))
-// return redirect()->back()->withInput()
-// session()->setFlashdata("Swal","Permintaan Anda berhasil ditambahkan");
