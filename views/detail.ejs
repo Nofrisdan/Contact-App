@@ -1,0 +1,18 @@
+<div class="container mt-3 ">
+    <div class="row justify-content-center">
+        <div class="col-md">
+            <div class="card" style="width: 30rem;">
+                <div class="card-body">
+                  <h5 class="card-title"><%= data[0].nama %></h5>
+                  <h6 class="card-subtitle mb-2 text-muted"><%= data[0].nohp %></h6>
+                  <p class="card-text">
+                      <%= data[0].email %>
+                  </p>
+                  <a href="/kontak" class="card-link">&laquo; Kembali Ke halaman Sebelumnya</a>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>
+
+<%- contentFor("script") %>
