@@ -1,0 +1,40 @@
+
+<div class="container mt-4">
+    <h1 class="text-center">Halaman Edit Kontak</h1>
+      <% if (typeof(errors) != "undefined") { %>
+        <div class="alert alert-danger" role="alert">
+          <strong>Terjadi kesalahan</strong>
+          <ul>
+            <% for( let i = 0; i < errors.length; i++ ) { %>
+              <li><%= errors[i].msg %></li>
+            <% } %>
+           
+          </ul>
+        </div>
+
+      <% } %>
+
+    <hr>
+<form method="POST" action="/kontak/update">
+    <input type="hidden" name="nama_lama" value="<%= kontak.nama %>">
+    <div class="form-group">
+      <label for="nama">Nama</label>
+      <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama " value="<%= kontak.nama %>" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" class="form-control" id="email"  aria-describedby="emailHelp" name="email" required  placeholder="Masukkan Alamat Email" value="<%= kontak.email %>">
+      <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    <div class="form-group">
+        <label for="nohp">No HP</label>
+        <input type="text" class="form-control" name="nohp" id="nohp"placeholder="Masukkan Nomor HP anda " value="<%= kontak.nohp %>" required>
+      </div>
+
+    <button type="submit" class="btn btn-primary">Ubah Data Kontak</button>
+
+  </form>
+</div>
+
+<%- contentFor("script") %>
+
