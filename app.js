@@ -79,7 +79,7 @@ app.get("/kontak/detail/:nama",(req,res) => {
     res.render("detail",{
         page:"Halaman Detail",
         menu:"kontak",
-        data : utils.findKontak(req.params.nama)
+        data : utils.findKontak(req.params.nama)[0]
     })
 })
 
@@ -90,7 +90,6 @@ app.get("/kontak/tambah",(req,res)=> {
         menu:"kontak"
     })
 })
-
 
 // INCLUDE EXPRESS-VALIDATOR
 app.post("/kontak/tambah-data",
@@ -115,6 +114,8 @@ app.post("/kontak/tambah-data",
 
     // handler
     const err = validationResult(req);
+
+    // clog
 
     if(!err.isEmpty()){
         // return res.status(400)
@@ -154,20 +155,88 @@ app.get("/kontak/hapus/:nama",(req,res) => {
     // const data = utils.deleteKontak(req.params.nama)
 })
 
+// update kontak view
+app.get("/kontak/update_kontak/:nama",(req,res) => {
+
+    // ambil datautil
+    const kontak = utils.findKontak(req.params.nama)[0];
+
+    res.render("edit-kontak",{
+        page:"Edit Kontak",
+        menu:"kontak",
+        kontak
+    })
+})
+
+// proses update
+app.post(
+
+    "/kontak/update",
+//express-validator
+[
+    //custom
+    body('nama').custom( (v,{req}) => {
+        const duplikat = utils.cekDuplikat(v);
+
+        if( v !== req.body.nama_lama && duplikat){
+            throw new Error("Nama yang anda masukkan sudah terdaftar");
+        }
+
+        return true;
+    }),
+
+    // check automatic
+    check("email").isEmail().withMessage("Email Yang Anda Masukkan Tidak Valid"),
+    check("nohp").isMobilePhone("id-ID").withMessage("No HandPhone Yang anda masukkan tidak valid")
+],
+(req,res) => {
+
+    // handler
+    const err = validationResult(req);
+    if(!err.isEmpty()){
+
+        
+        // res.json(
+        //         {
+        //             "error":err.array(),
+        //             "value" : req.body
+        //         }
+        //     ); 
+        res.render("edit-kontak",{
+            page:"Halaman Edit Kontak",
+            menu:"kontak",
+            kontak:req.body,
+            errors : err.array()
+        })
+
+    }else{
+        // update kontak
+        utils.updateKontak(req.body);
+        // // set flash
+        req.flash("msg","Data Kontak Berhasil di ubah");
+        // // redirect
+        res.redirect("/kontak");
+    }
+    
+})
+
+
 // testing
 app.get("/testing",(req,res) => {
     
-    // cookie yang belum ditanda tangani
-    console.log("Cookies-blm-ttd :",req.cookies);
+    // // cookie yang belum ditanda tangani
+    // console.log("Cookies-blm-ttd :",req.cookies);
 
-    // cookie telah ditanda tangani
-    console.log("Signed Cookie : ",req.signedCookies);
+    // // cookie telah ditanda tangani
+    // console.log("Signed Cookie : ",req.signedCookies);
+
+    const kontak = utils.findKontak("Nofrisdan Sitopu");
+
+    console.log(kontak);
 
     res.send("berhasil dibuatkan silahkan lihat di log");
 
 })
-
-
 
 // app.post("/kontak")
 app.listen(port,() => {
