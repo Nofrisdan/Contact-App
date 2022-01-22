@@ -44,6 +44,8 @@ function addKontak(data){
 function save(data){
     // const kontak = getKontak();
     fs.writeFileSync(file,JSON.stringify(data));
+
+    return true;
 }
 
 // -------- menghapus kontak ----
@@ -61,6 +63,23 @@ function deleteAll(){
     const data = [];
 
     save(data);
+}
+
+// update kontak
+function updateKontak(KontakBaru){
+    const kontak = getKontak();
+
+    // hilangkan kontak lama yang sama dengan nama lama
+    const filterKontak = kontak.filter( v => v.nama !== KontakBaru.nama_lama);
+    const dataBaru = {
+        nama : KontakBaru.nama,
+        email: KontakBaru.email,
+        nohp:KontakBaru.nohp
+    }
+
+    filterKontak.push(dataBaru);
+
+    save(filterKontak);
 }
 
 
@@ -86,5 +105,6 @@ module.exports = {
     addKontak,
     deleteKontak,
     deleteAll,
-    cekDuplikat
+    cekDuplikat,
+    updateKontak
 }

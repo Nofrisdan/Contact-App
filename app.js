@@ -161,8 +161,6 @@ app.get("/kontak/update_kontak/:nama",(req,res) => {
     // ambil datautil
     const kontak = utils.findKontak(req.params.nama)[0];
 
-    console.log(kontak);
-
     res.render("edit-kontak",{
         page:"Edit Kontak",
         menu:"kontak",
@@ -171,9 +169,57 @@ app.get("/kontak/update_kontak/:nama",(req,res) => {
 })
 
 // proses update
-app.post("/kontak/update",(req,res) => {
-    res.json({result:req.body});
+app.post(
+
+    "/kontak/update",
+//express-validator
+[
+    //custom
+    body('nama').custom( (v,{req}) => {
+        const duplikat = utils.cekDuplikat(v);
+
+        if( v !== req.body.nama_lama && duplikat){
+            throw new Error("Nama yang anda masukkan sudah terdaftar");
+        }
+
+        return true;
+    }),
+
+    // check automatic
+    check("email").isEmail().withMessage("Email Yang Anda Masukkan Tidak Valid"),
+    check("nohp").isMobilePhone("id-ID").withMessage("No HandPhone Yang anda masukkan tidak valid")
+],
+(req,res) => {
+
+    // handler
+    const err = validationResult(req);
+    if(!err.isEmpty()){
+
+        
+        // res.json(
+        //         {
+        //             "error":err.array(),
+        //             "value" : req.body
+        //         }
+        //     ); 
+        res.render("edit-kontak",{
+            page:"Halaman Edit Kontak",
+            menu:"kontak",
+            kontak:req.body,
+            errors : err.array()
+        })
+
+    }else{
+        // update kontak
+        utils.updateKontak(req.body);
+        // // set flash
+        req.flash("msg","Data Kontak Berhasil di ubah");
+        // // redirect
+        res.redirect("/kontak");
+    }
+    
 })
+
 
 // testing
 app.get("/testing",(req,res) => {
@@ -191,9 +237,6 @@ app.get("/testing",(req,res) => {
     res.send("berhasil dibuatkan silahkan lihat di log");
 
 })
-
-
-
 
 // app.post("/kontak")
 app.listen(port,() => {

@@ -13,10 +13,9 @@
         </div>
 
       <% } %>
-
     <hr>
 <form method="POST" action="/kontak/update">
-    <input type="hidden" name="nama_lama" value="<%= kontak.nama %>">
+    <input type="hidden" name="nama_lama" value="<%= (kontak.nama_lama) ? kontak.nama_lama : kontak.nama %>">
     <div class="form-group">
       <label for="nama">Nama</label>
       <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama " value="<%= kontak.nama %>" required>
